@@ -1,5 +1,5 @@
 <web-app>
-    <display-name>Simple Servlet Application</display-name>
+  <!--  <display-name>Simple Servlet Application</display-name>
     <servlet>
         <servlet-name>MyServlet</servlet-name>
         <servlet-class>MyServlet</servlet-class>
@@ -9,6 +9,6 @@
     <servlet-mapping>
         <servlet-name>MyServlet</servlet-name>
         <url-pattern>/test</url-pattern>
-    </servlet-mapping>
+    </servlet-mapping>-->
 
 </web-app>
