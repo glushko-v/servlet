@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 
 @WebServlet(urlPatterns = "/test")
 public class MyServlet extends HttpServlet{
+    ItemDAO itemDAO = new ItemDAO();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -32,7 +33,7 @@ public class MyServlet extends HttpServlet{
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         super.doPost(req, resp);
         BufferedReader br = req.getReader();
-        ItemDAO itemDAO = new ItemDAO();
+
 
 
         ObjectMapper mapper = new ObjectMapper();
