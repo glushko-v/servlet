@@ -2,6 +2,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "ITEM")
@@ -28,7 +29,7 @@ public class Item {
     @JsonProperty("Number")
     @Id
     @Column(name = "ID")
-    @SequenceGenerator(name = "I_SEQ", sequenceName = "USER_SEQ", allocationSize = 1)
+    @SequenceGenerator(name = "I_SEQ", sequenceName = "ITEM_SEQ", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "I_SEQ")
     public long getId() {
         return id;
@@ -81,5 +82,22 @@ public class Item {
     @Override
     public String toString() {
         return "id=" + id + " " + name + " " + dateCreated + " " + description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Item item = (Item) o;
+        return id == item.id &&
+                Objects.equals(name, item.name) &&
+                Objects.equals(dateCreated, item.dateCreated) &&
+                Objects.equals(lastUpdatedDate, item.lastUpdatedDate) &&
+                Objects.equals(description, item.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, dateCreated, lastUpdatedDate, description);
     }
 }

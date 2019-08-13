@@ -3,13 +3,17 @@ import org.hibernate.SessionFactory;
 import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
 
-import javax.persistence.Query;
+
+ class ItemDAO {
+
+    //считывание данных
+    //обработка данных - маппинг
+    //CRUD операции
 
 
-public class ItemDAO {
-    SessionFactory sessionFactory;
+     SessionFactory sessionFactory;
 
-    SessionFactory getSessionFactory() {
+     SessionFactory getSessionFactory() {
         if (sessionFactory == null) {
             sessionFactory = new Configuration().configure().buildSessionFactory();
         }
@@ -56,12 +60,56 @@ public class ItemDAO {
 
             tr.commit();
 
-            System.out.println(item);
+
 
         } catch (HibernateException e) {
             e.printStackTrace();
             if (tr != null) tr.rollback();
         }
+
+        return item;
+    }
+
+    public void delete(long id){
+
+        Transaction tr = null;
+
+        try(Session session = getSessionFactory().openSession()){
+
+            tr = session.getTransaction();
+            tr.begin();
+
+            Item item = findById(id);
+            session.delete(item);
+
+            tr.commit();
+            System.out.println("Deleted");
+
+        } catch (HibernateException e){
+            e.printStackTrace();
+            if (tr!= null) tr.rollback();
+        }
+    }
+
+    public Item update(Item item) {
+
+        Transaction tr = null;
+
+        try (Session session = getSessionFactory().openSession()) {
+
+            tr = session.getTransaction();
+            tr.begin();
+
+            session.update(item);
+
+            tr.commit();
+            System.out.println("Updated");
+
+        } catch (HibernateException e) {
+            e.printStackTrace();
+            if (tr != null) tr.rollback();
+        }
+
 
         return item;
     }

@@ -10,13 +10,23 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 @WebServlet(urlPatterns = "/test")
-public class MyServlet extends HttpServlet{
-    ItemDAO itemDAO = new ItemDAO();
+public class MyServlet extends HttpServlet {
+    private ItemController itemController = new ItemController();
+    private ItemDAO itemDAO = new ItemDAO();
+    ObjectMapper mapper = new ObjectMapper();
+    private long id;
+    Item item;
+    BufferedReader br;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        resp.getWriter().println(req.getParameter("param"));
-        resp.getWriter().println("Test!");
+
+
+        id = Long.parseLong(req.getParameter("id"));
+        PrintWriter pw = resp.getWriter();
+        pw.println(itemController.findById(id));
+
+
     }
 
     @Override
@@ -27,33 +37,57 @@ public class MyServlet extends HttpServlet{
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         super.doPut(req, resp);
+
+        br = req.getReader();
+        try {
+            item = mapper.readValue(br, Item.class);
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        System.out.println(item);
+        itemController.update(item);
+
+
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         super.doPost(req, resp);
-        BufferedReader br = req.getReader();
 
+        br = req.getReader();
 
-
-        ObjectMapper mapper = new ObjectMapper();
-        Item item = null;
         try {
             item = mapper.readValue(br, Item.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(item);
-        itemDAO.save(item);
+        itemController.save(item);
 
 
-//        req.getInputStream();
-//        req.getReader();
+
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         super.doDelete(req, resp);
+
+        br = req.getReader();
+        try {
+
+            item = mapper.readValue(br, Item.class);
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        itemController.delete(item.getId());
+
+
     }
 
     // get - получить информацию из БД
