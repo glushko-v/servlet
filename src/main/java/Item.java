@@ -1,5 +1,6 @@
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
@@ -89,15 +90,16 @@ public class Item {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Item item = (Item) o;
-        return id == item.id &&
-                Objects.equals(name, item.name) &&
-                Objects.equals(dateCreated, item.dateCreated) &&
-                Objects.equals(lastUpdatedDate, item.lastUpdatedDate) &&
-                Objects.equals(description, item.description);
+        return name.equals(item.name) &&
+                dateCreated.getTime() == item.dateCreated.getTime() &&
+                lastUpdatedDate.getTime() == item.lastUpdatedDate.getTime() &&
+//                dateCreated.equals(item.dateCreated) &&
+//                lastUpdatedDate.equals(item.lastUpdatedDate) &&
+                description.equals(item.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, dateCreated, lastUpdatedDate, description);
+        return Objects.hash(name, dateCreated, lastUpdatedDate, description);
     }
 }

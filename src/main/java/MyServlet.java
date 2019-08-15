@@ -12,45 +12,30 @@ import java.io.PrintWriter;
 @WebServlet(urlPatterns = "/test")
 public class MyServlet extends HttpServlet {
     private ItemController itemController = new ItemController();
-    private ItemDAO itemDAO = new ItemDAO();
-    ObjectMapper mapper = new ObjectMapper();
-    private long id;
-    Item item;
-    BufferedReader br;
+
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
-
-        id = Long.parseLong(req.getParameter("id"));
+        long id = Long.parseLong(req.getParameter("id"));
         PrintWriter pw = resp.getWriter();
-        pw.println(itemController.findById(id));
+        if (!itemController.isIdExists(id)) {
+            resp.sendError(400, ("There's no item with id " + id));
 
-
+        } else pw.println(itemController.findById(id));
     }
 
-    @Override
-    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.service(req, resp);
-    }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         super.doPut(req, resp);
 
-        br = req.getReader();
-        try {
-            item = mapper.readValue(br, Item.class);
+        //TODO
 
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        System.out.println(item);
-        itemController.update(item);
-
+        BufferedReader br = req.getReader();
+        itemController.update(itemController.mapJSONtoItem(br));
+        resp.setStatus(200);
 
     }
 
@@ -58,15 +43,9 @@ public class MyServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         super.doPost(req, resp);
 
-        br = req.getReader();
-
-        try {
-            item = mapper.readValue(br, Item.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        itemController.save(item);
-
+        BufferedReader br = req.getReader();
+        itemController.save(itemController.mapJSONtoItem(br));
+        resp.setStatus(200);
 
 
     }
@@ -75,23 +54,16 @@ public class MyServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         super.doDelete(req, resp);
 
-        br = req.getReader();
-        try {
+        long id = Long.parseLong(req.getParameter("id"));
+        PrintWriter pw = resp.getWriter();
+        if (!itemController.isIdExists(id)) {
+            System.err.println("There's no item with id " + id);
 
-            item = mapper.readValue(br, Item.class);
+        } else itemController.delete(id);
 
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        itemController.delete(item.getId());
+//        itemController.delete(id);
 
 
     }
 
-    // get - получить информацию из БД
-    // post - сохранение информации (регистрация пользователя, заказ и т.д.)
-    // put - обновление существующей информации
-    // delete - удаление информации из БД
 }

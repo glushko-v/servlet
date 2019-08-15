@@ -17,12 +17,8 @@ public class ItemService {
 
 
         if (!isItemExists(item) && !isNullFields(item)) return itemDAO.save(item);
-
-        else if (isItemExists(item))
-            throw new Exception("Item " + item.getName() + " has been already saved");
-
-        else throw new Exception("Item " + item.getName()  + " contains null fields");
-
+        else if (isItemExists(item)) throw new Exception("Item " + item.getName() + " has been already saved");
+        else throw new Exception("Item " + item.getName() + " contains null fields");
 
     }
 
@@ -64,10 +60,14 @@ public class ItemService {
             Query query = session.createSQLQuery("SELECT * FROM ITEM").addEntity(Item.class);
             items = query.getResultList();
 
+            int index = 0;
             for (Item itemFromDb : items) {
-                if (itemFromDb.equals(item)) return true;
+
+                if (itemFromDb.equals(item)) index++;
+
             }
 
+            if (index > 0) return true;
 
             tr.commit();
 

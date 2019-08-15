@@ -1,7 +1,13 @@
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+
+
 public class ItemController {
     private ItemService itemService = new ItemService();
 
-    Item save(Item item) {
+    Item save(Item item)  {
 
 
         try {
@@ -11,9 +17,10 @@ public class ItemController {
         }
 
         return null;
+
     }
 
-    void delete(long id)  {
+    void delete(long id) {
 
         try {
             itemService.delete(id);
@@ -22,7 +29,7 @@ public class ItemController {
         }
     }
 
-    Item findById(long id)  {
+    Item findById(long id) {
 
         try {
             return itemService.findById(id);
@@ -33,7 +40,7 @@ public class ItemController {
         return null;
     }
 
-    Item update(Item item)  {
+    Item update(Item item) {
 
         try {
             return itemService.update(item);
@@ -42,6 +49,35 @@ public class ItemController {
         }
 
         return null;
+    }
+
+    Item mapJSONtoItem(BufferedReader br) {
+
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+
+
+            Item item = mapper.readValue(br, Item.class);
+
+            return item;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+
+    }
+
+    boolean isIdExists(long id){
+
+        return itemService.isIdExists(id);
+    }
+
+    boolean isItemExists(Item item){
+
+        return itemService.isItemExists(item);
     }
 
 
