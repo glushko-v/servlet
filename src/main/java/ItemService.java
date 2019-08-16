@@ -36,10 +36,10 @@ public class ItemService {
         else throw new Exception("There's no item with id " + id);
     }
 
-    Item update(Item item) throws Exception {
+    Item update(Item item, long id) throws Exception {
 
 
-        if (!isItemExists(item) && !isNullFields(item)) return itemDAO.update(item);
+        if (!isItemExists(item) && !isNullFields(item)) return itemDAO.update(item, id);
 
         else if (isItemExists(item))
             throw new Exception("There's no item " + item.getName());

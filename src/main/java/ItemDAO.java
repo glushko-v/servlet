@@ -3,8 +3,10 @@ import org.hibernate.SessionFactory;
 import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
 
+import javax.persistence.Query;
 
- class ItemDAO {
+
+class ItemDAO {
 
     //считывание данных
     //обработка данных - маппинг
@@ -37,6 +39,7 @@ import org.hibernate.cfg.Configuration;
 
         } catch (HibernateException e) {
             e.printStackTrace();
+            System.out.println("Save is failed");
             if (tr != null) tr.rollback();
         }
 
@@ -64,6 +67,7 @@ import org.hibernate.cfg.Configuration;
 
         } catch (HibernateException e) {
             e.printStackTrace();
+            System.err.println("Error");
             if (tr != null) tr.rollback();
         }
 
@@ -87,11 +91,12 @@ import org.hibernate.cfg.Configuration;
 
         } catch (HibernateException e){
             e.printStackTrace();
+            System.out.println("Delete is failed");
             if (tr!= null) tr.rollback();
         }
     }
 
-    public Item update(Item item) {
+    public Item update(Item item, long id) {
 
         Transaction tr = null;
 
@@ -100,13 +105,22 @@ import org.hibernate.cfg.Configuration;
             tr = session.getTransaction();
             tr.begin();
 
-            session.update(item);
+            Query query = session.createSQLQuery("UPDATE ITEM SET NAME = ?, DATE_CREATED = ?, DATE_UPDATED = ?, DESCRIPTION = ? WHERE ID =?");
+            query.setParameter(1, item.getName());
+            query.setParameter(2, item.getDateCreated());
+            query.setParameter(3, item.getLastUpdatedDate());
+            query.setParameter(4, item.getDescription());
+            query.setParameter(5, id);
+
+            int res = query.executeUpdate();
+
 
             tr.commit();
-            System.out.println("Updated");
+            System.out.println("Updated with result " + res);
 
         } catch (HibernateException e) {
             e.printStackTrace();
+            System.err.println("Update is failed");
             if (tr != null) tr.rollback();
         }
 

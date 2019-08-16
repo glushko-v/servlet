@@ -30,12 +30,18 @@ public class MyServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         super.doPut(req, resp);
 
-        //TODO
 
-
+        long id = Long.parseLong(req.getParameter("id"));
         BufferedReader br = req.getReader();
-        itemController.update(itemController.mapJSONtoItem(br));
-        resp.setStatus(200);
+
+        if (!itemController.isIdExists(id)) {
+            resp.sendError(400, ("There's no item with id " + id));
+
+        } else {
+            itemController.update(itemController.mapJSONtoItem(br), id);
+            resp.setStatus(200);
+        }
+
 
     }
 
@@ -55,13 +61,13 @@ public class MyServlet extends HttpServlet {
         super.doDelete(req, resp);
 
         long id = Long.parseLong(req.getParameter("id"));
-        PrintWriter pw = resp.getWriter();
+
         if (!itemController.isIdExists(id)) {
-            System.err.println("There's no item with id " + id);
+            resp.sendError(400, ("There's no item with id " + id));
 
         } else itemController.delete(id);
 
-//        itemController.delete(id);
+
 
 
     }

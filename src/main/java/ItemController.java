@@ -40,10 +40,10 @@ public class ItemController {
         return null;
     }
 
-    Item update(Item item) {
+    Item update(Item item, long id) {
 
         try {
-            return itemService.update(item);
+            return itemService.update(item, id);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -75,10 +75,7 @@ public class ItemController {
         return itemService.isIdExists(id);
     }
 
-    boolean isItemExists(Item item){
 
-        return itemService.isItemExists(item);
-    }
 
 
 }
